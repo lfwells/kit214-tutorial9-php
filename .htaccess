@@ -1,0 +1,5 @@
+RewriteEngine on 
+RewriteRule ^employee/([0-9]+)		Controller/ControllerEmployee.php?action=read&id=$1	[QSA]
+RewriteRule ^employee/([A-Za-z\s]+)	Controller/ControllerEmployee.php?action=read&name=$1	[QSA]
+RewriteRule ^employee			Controller/ControllerEmployee.php			[QSA]
+RewriteRule ^getToken			Controller/ControllerToken.php				[QSA]

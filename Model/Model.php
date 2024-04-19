@@ -48,8 +48,11 @@ class Model
 		$stmt = $mysqli->prepare("INSERT INTO movie (name, year, director) VALUES (?, ?, ?)");
 		$stmt->bind_param("sis", $name, $year, $director);
 		$stmt->execute();
+
+		//find out the id of the newly created record
+		$id = $mysqli->insert_id;
 		
-		return $this->getMovieList();
+		return $this->getMovieByID($id);
 	}
 
 	public function update($id, $name, $year, $director)  
@@ -61,7 +64,7 @@ class Model
 		$stmt->bind_param("sisi", $name, $year, $director, $id);
 		$stmt->execute();
 		
-		return $this->getMovieList();
+		return $this->getMovieByID($id);
 	}
 
 	public function delete($id)  

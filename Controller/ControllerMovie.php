@@ -69,7 +69,6 @@ class ControllerMovie
 	//additional validation functions
 	protected function validateID($id)
 	{
-		var_dump($id);
 		if(!is_numeric($id) || $id <= 0)
 		{
 			header("HTTP/1.1 400 Bad Request");

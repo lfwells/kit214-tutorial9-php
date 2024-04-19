@@ -1,16 +1,17 @@
 <?php
-//connect to mysql
+include_once("View/ViewErrorMessage.php");  
 
-$password = trim(file_get_contents("/home/ubuntu/password.txt"));
+//TODO: update this line with your own password file
+$password = "UjB9XwAi57vdV2H0";//trim(file_get_contents("/home/ubuntu/password.txt"));
 
-$mysqli = new mysqli('localhost', 'root', $password, 'lamp_db');
+$mysqli = new mysqli('localhost', 'tute9', $password, 'tute9');
 
-$dataConn = true;
-
-if (mysqli_connect_errno()) {
-	//printf("Connect failed: %s\n", mysqli_connect_error());
-	$dataConn = false;
-	//exit();
+if (mysqli_connect_errno()) 
+{
+	// return a server error with json output here
+	header('HTTP/1.1 500 Internal Server Error');
+	$error = new ViewErrorMessage();
+	$error->output("Database connection error");
+	exit();
 }
-
 ?>

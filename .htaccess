@@ -1,5 +1,6 @@
+Header add Access-Control-Allow-Origin "*"
+Header add Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+
 RewriteEngine on 
-RewriteRule ^employee/([0-9]+)		Controller/ControllerEmployee.php?action=read&id=$1	[QSA]
-RewriteRule ^employee/([A-Za-z\s]+)	Controller/ControllerEmployee.php?action=read&name=$1	[QSA]
-RewriteRule ^employee			Controller/ControllerEmployee.php			[QSA]
-RewriteRule ^getToken			Controller/ControllerToken.php				[QSA]
+RewriteRule ^movie/([0-9]+)/?       index.php?id=$1    [QSA]
+RewriteRule ^movie                  index.php          [QSA]

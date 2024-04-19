@@ -1,131 +1,71 @@
 <?php
-	include_once("Employee.php");  
+include_once("DBConn.php");  
+include_once("Movie.php");  
+  
+//TODO: this needs to use bindings to prevent SQL injection
+class Model 
+{  
+    public function getMovieList()  
+    {  
+        global $mysqli;
+
+        $sql = "SELECT * FROM movie";
+
+        $result = $mysqli->query($sql);
+
+        $arr = array();
+        while($row = $result->fetch_array(MYSQLI_ASSOC))
+        {
+            $arr[] = new Movie($row['id'], $row['name'],$row['year'],$row['director']);
+        }
+        return $arr;
+
+    }        
+  
+    public function getMovieByID($id)  
+    { 
+        global $mysqli;
+
+        $sql = "SELECT * FROM movie WHERE id = $id";
+
+        $result = $mysqli->query($sql);
+
+        $row = $result->fetch_array(MYSQLI_ASSOC);
+
+        return [ new Movie($row['id'], $row['name'],$row['year'],$row['director']) ];
+    }       
 	
-	
-	class Model {  
-
-		public $mysqli = "";
-		public $dataConn = true;
-
-		function __construct() {
-
-			$password = trim(file_get_contents("/home/ubuntu/password.txt"));
-			$this->mysqli = new mysqli('localhost', 'root', $password, 'lamp_db');
-
-			$this->dataConn = true;
-			if (mysqli_connect_errno()) {
-				$this->dataConn = false;
-			}
-		}
-
-
-		public function searchEmployeebyName($uname)  {			
- 
-			if($this->dataConn) {
-
-				$sql = "select * from employee where name LIKE '%" . $uname . "%'";
-				$result = $this->mysqli->query($sql);
-
-				$arr= array();
-			
-				if($result) {
-					while($row = $result->fetch_array(MYSQLI_ASSOC))	{				
-						$arr[$row['id']] = new Employee($row['name'], $row['email'], $row['salary'], $row['id']);
-					}
-				}
-
-				return $arr;
-			}
-			else {
-				return false;
-			}
-		}   
+	public function create($name, $year, $director)  
+	{  
+		global $mysqli;
 		
-
-		public function searchEmployeebyID($id)  {  
-
-			if($this->dataConn) {
-
-				$sql = "select * from employee where id = " . $id;
-				$result = $this->mysqli->query($sql);
-
-				$arr= array();
-			
-				if($result) {
-					while($row = $result->fetch_array(MYSQLI_ASSOC))	{				
-						$arr[$row['id']] = new Employee($row['name'], $row['email'], $row['salary'], $row['id']);
-					}
-				}
-			
-				return $arr;
-			}
-			else {
-				return false;
-			}
-		} 
+		$sql = "INSERT INTO movie (name, year, director) VALUES ('$name', $year, '$director')";
 		
-
-		public function createNewEmployee($uname, $sal, $id, $email)  	{  
-
-			$sql = "insert into employee values ($id, '$uname', $sal, '$email')";
-			$result = $this->mysqli->query($sql);
-
-			if($result) {
-				$result = $this->searchEmployeebyID($id);
-			}
-			else {
-				$result = "{ \"error\": \"could not insert\" }";
-			}
-			
-			return $result;
-		} 
+		$mysqli->query($sql);
 		
+		return $this->getMovieList();
+	}
 
-		public function updateEmployee($sal, $id, $email)  	{  
+	public function update($id, $name, $year, $director)  
+	{  
+		global $mysqli;
 		
-			$sql = "select * from employee where id = " . $id;
-			$result = $this->mysqli->query($sql);
-			
-			if($result && $this->mysqli->affected_rows > 0) {
-				
-				$sql= "update employee set salary = $sal, email = '$email' where id = $id";
-				$result=$this->mysqli->query($sql);
-				
-				if($result) {
-					$result = $this->searchEmployeebyID($id);
-				}
-				else {
-					$result = "{ \"error\": \"could not Update\" }";
-				}
-			
-				return $result;
-			}
-			else
-				$result = false;
-		}  
+		$sql = "UPDATE movie SET name = '$name', year = $year, director = '$director' WHERE id = $id";
 		
- 
-		public function deleteEmployee($id)  {  
-			 
-			$sql= "delete from employee where id = '$id'";
-			$result=$this->mysqli->query($sql);
-
-			if($result && $this->mysqli->affected_rows > 0) {
-				$result = "{ \"success\": \"Deleted $id\" }";
-			}
-			else {
-				$result = "{ \"error\": \"could not Delete\" }";
-			}
-			
-			return $result;
-		}
+		$mysqli->query($sql);
 		
+		return $this->getMovieList();
+	}
 
-		public function generateToken($user, $password)  {  
-
-			// Generate Token here
-			
-			return 1; //$result;
-		}   		
-	} 
+	public function delete($id)  
+	{  
+		global $mysqli;
+		
+		$sql = "DELETE FROM movie WHERE id = $id";
+		
+		$mysqli->query($sql);
+		
+		return $this->getMovieList();
+	}
+} 
 ?>

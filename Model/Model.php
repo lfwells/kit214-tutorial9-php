@@ -30,6 +30,9 @@ class Model
 
         $result = $mysqli->query($sql);
 
+		if($result->num_rows == 0)
+			return [];
+
         $row = $result->fetch_array(MYSQLI_ASSOC);
 
         return [ new Movie($row['id'], $row['name'],$row['year'],$row['director']) ];

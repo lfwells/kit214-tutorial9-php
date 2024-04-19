@@ -72,7 +72,7 @@ class ControllerMovie
 		var_dump($id);
 		if(!is_numeric($id) || $id <= 0)
 		{
-			header("HTTP/1.1 400 Bad Request")
+			header("HTTP/1.1 400 Bad Request");
 			$v = new ViewErrorMessage();
 			echo $v->output("Invalid ID");
 			exit;
@@ -83,7 +83,7 @@ class ControllerMovie
 	{
 		if(strlen($name) <= 0)
 		{
-			header("HTTP/1.1 400 Bad Request")
+			header("HTTP/1.1 400 Bad Request");
 			$v = new ViewErrorMessage();
 			echo $v->output("Invalid Name");
 			exit;
@@ -94,7 +94,7 @@ class ControllerMovie
 	{
 		if(!is_numeric($year) || $year <= 0)
 		{
-			header("HTTP/1.1 400 Bad Request")
+			header("HTTP/1.1 400 Bad Request");
 			$v = new ViewErrorMessage();
 			echo $v->output("Invalid Year");
 			exit;

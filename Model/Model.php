@@ -26,9 +26,11 @@ class Model
     { 
         global $mysqli;
 
-        $sql = "SELECT * FROM movie WHERE id = $id";
-
-        $result = $mysqli->query($sql);
+		//note the use of bindings now
+		$stmt = $mysqli->prepare("SELECT * FROM movie WHERE id = ?");
+		$stmt->bind_param("i", $id);
+		$stmt->execute();
+		$result = $stmt->get_result();
 
 		if($result->num_rows == 0)
 			return [];
@@ -42,9 +44,10 @@ class Model
 	{  
 		global $mysqli;
 		
-		$sql = "INSERT INTO movie (name, year, director) VALUES ('$name', $year, '$director')";
-		
-		$mysqli->query($sql);
+		//note the use of bindings now
+		$stmt = $mysqli->prepare("INSERT INTO movie (name, year, director) VALUES (?, ?, ?)");
+		$stmt->bind_param("sis", $name, $year, $director);
+		$stmt->execute();
 		
 		return $this->getMovieList();
 	}
@@ -53,9 +56,10 @@ class Model
 	{  
 		global $mysqli;
 		
-		$sql = "UPDATE movie SET name = '$name', year = $year, director = '$director' WHERE id = $id";
-		
-		$mysqli->query($sql);
+		//note the use of bindings now
+		$stmt = $mysqli->prepare("UPDATE movie SET name = ?, year = ?, director = ? WHERE id = ?");
+		$stmt->bind_param("sisi", $name, $year, $director, $id);
+		$stmt->execute();
 		
 		return $this->getMovieList();
 	}
@@ -64,9 +68,10 @@ class Model
 	{  
 		global $mysqli;
 		
-		$sql = "DELETE FROM movie WHERE id = $id";
-		
-		$mysqli->query($sql);
+		//note the use of bindings now
+		$stmt = $mysqli->prepare("DELETE FROM movie WHERE id = ?");
+		$stmt->bind_param("i", $id);
+		$stmt->execute();
 		
 		return $this->getMovieList();
 	}
